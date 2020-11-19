@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlotMachine</title>
+    <style>
+        .inactive{
+            opacity:0.5;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <my-component ref="foo"></my-component>
+        <div v-on:click="start()">start</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+
+        var myComponent = Vue.extend({
+            data(){
+                return{
+                    'inactive':'inactive'
+                }
+            },
+            template:`<section></section>`,
+            methods:{
+                test(){
+                    console.log("test called")
+                },
+            },
+        });
+
+        var vue = new Vue({
+            el:'#app',
+            components:{
+                'my-component':myComponent
+            },
+            methods:{
+                start(){
+                    console.log("start");
+                    this.$refs.foo.test();
+                },
+            }
+        });
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

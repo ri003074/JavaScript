@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyQuiz</title>
+
+    <style>
+        body {
+            background: #efdec1;
+            font-size: 14px;
+            font-family: Verdana, sans-serif;
+        }
+
+        .container {
+            width: 400px;
+            margin: 8px auto;
+            background: #fff;
+            border-radius: 4px;
+            padding: 16px;
+            position: relative;
+        }
+
+        #question {
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+
+        #choices {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 16px;
+        }
+
+        #choices>li {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        #choices>li:hover {
+            background: #f8f8f8;
+        }
+
+        #choices>li.correct {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+            font-weight: bold;
+        }
+
+        #choices>li.correct::after {
+            content: ' ... correct!';
+        }
+
+        #choices>li.wrong {
+            background: #f8d8da;
+            border-color: #f5c6cb;
+            color: #721c24;
+            font-weight: bold;
+        }
+
+        #choices>li.wrong::after {
+            content: ' ... wrong!';
+        }
+
+        #btn,
+        #result>a {
+            background: #3498db;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 4px 0 #2880b9;
+        }
+
+        #btn.disabled {
+            background: #ccc;
+            box-shadow: 0 4px 0 #bbb;
+            opacity: 0.7;
+        }
+
+        #result {
+            position: absolute;
+            width: 300px;
+            background: #fff;
+            padding: 30px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            top: 50px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            border-radius: 4px;
+            text-align: center;
+            transition: 0.4s;
+        }
+
+        #result.hidden {
+            transform: translateY(-500px);
+        }
+
+        #result>p {
+            font-size: 24px;
+        }
+
+        #result>a {
+            display: block;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <section class="container">
+        <p id="question"></p>
+        <ul id="choices"></ul>
+        <div id="btn" class="disabled">Next</div>
+
+        <section id="result" class="hidden">
+            <p></p>
+            <a href="">Replay?</a>
+        </section>
+    </section>
+
+
+    <script>
+        'use strict';
+
+        {
+            const question = document.getElementById('question');
+            const choices = document.getElementById('choices');
+            const btn = document.getElementById('btn');
+            const result = document.getElementById('result');
+            const scoreLabel = document.querySelector('#result > p');
+
+            const quizSet = shuffle([
+                { q: '世界で一番大きな湖は？', c: ['カスピ海', 'カリブ海', '琵琶湖'] },
+                { q: '2の8乗は？', c: ['256', '64', '1024'] },
+                { q: '次のうち、最初にリリースされた言語は？', c: ['Python', 'JavaScript', 'HTML'] },
+            ]);
+            let currentNum = 0;
+            let isAnswered;
+            let score = 0;
+
+            function shuffle(arr) {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[j], arr[i]] = [arr[i], arr[j]];
+                }
+                return arr;
+            }
+
+            function checkAnswer(li) {
+                if (isAnswered) {
+                    return;
+                }
+                isAnswered = true;
+
+                if (li.textContent === quizSet[currentNum].c[0]) {
+                    li.classList.add('correct');
+                    score++;
+                } else {
+                    li.classList.add('wrong');
+                }
+
+                btn.classList.remove('disabled');
+            }
+
+            function setQuiz() {
+                isAnswered = false;
+
+                question.textContent = quizSet[currentNum].q;
+
+                while (choices.firstChild) {
+                    choices.removeChild(choices.firstChild);
+                }
+
+                const shuffledChoices = shuffle([...quizSet[currentNum].c]);
+                shuffledChoices.forEach(choice => {
+                    const li = document.createElement('li');
+                    li.textContent = choice;
+                    li.addEventListener('click', () => {
+                        checkAnswer(li);
+                    });
+                    choices.appendChild(li);
+                });
+
+                if (currentNum === quizSet.length - 1) {
+                    btn.textContent = 'Show Score';
+                }
+            }
+
+            setQuiz();
+
+            btn.addEventListener('click', () => {
+                if (btn.classList.contains('disabled')) {
+                    return;
+                }
+                btn.classList.add('disabled');
+
+                if (currentNum === quizSet.length - 1) {
+                    scoreLabel.textContent = `Score: ${score} / ${quizSet.length}`;
+                    result.classList.remove('hidden');
+                } else {
+                    currentNum++;
+                    setQuiz();
+                }
+            });
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id = "app">
+        <my-component v-on:app="appFunc"></my-component>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+
+       var myComponent = Vue.extend({
+        template:`<button v-on:click="cpFunc()">hello</button>` ,
+        methods:{
+            cpFunc(){
+                this.$emit('app');
+                console.log("cpFunc called");
+            }
+        }
+       }) ;
+
+        var vue = new Vue({
+            el:'#app',
+            data(){
+                return{
+                }
+            },
+            components:{
+                'my-component':myComponent
+            },
+            methods:{
+                appFunc(){
+                    console.log("appFunc called");
+                }
+            }
+        });
+    </script>
+</body>
+</html>

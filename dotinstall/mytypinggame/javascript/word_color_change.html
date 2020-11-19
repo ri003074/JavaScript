@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            padding-top: 40px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+        }
+        .correct {
+            color: red;
+        }
+        #target {
+            font-size: 48px;
+            letter-spacing: 3px;
+        }
+        .info {
+            color: #ccc;
+        }
+    </style>
+    </style>
+</head>
+
+<body>
+    <p id="target">
+    </p>
+    <p class="info">
+        Letter count:<span id="score">0</span>
+        Miss count :<span id="miss">0</span>
+    </p>
+
+    <script>
+        'use strict';
+
+
+        const words = [
+            "ringo",
+            "gorira",
+            "rappa",
+        ];
+        let loc = 0;
+        let  num=0;
+        // let word = words[Math.floor(Math.random() * words.length)];
+        let word = words[num];
+
+        const target = document.getElementById("target");
+
+        function updateWord() {
+            let element = document.getElementById('target');
+            while (element.firstChild) element.removeChild(element.firstChild);
+
+            for (let i = 0; i < word.length; i++) {
+                const span = document.createElement('span');
+                span.textContent = word[i]
+                target.appendChild(span);
+            }
+        }
+
+        updateWord();
+
+        let element;
+        window.addEventListener('keydown', (e) => {
+            element = document.getElementById('target').children[loc];
+            if (e.key === element.textContent) {
+                element.classList.add("correct");
+                loc++;
+                element = document.getElementById('target').children[loc];
+
+                if (loc === word.length) {
+                    //word = words[Math.floor(Math.random() * words.length)];
+                    num ++;
+                    word = words[num];
+                    loc = 0;
+                    updateWord();
+                    element = document.getElementById('target');
+                }
+            }
+
+        })
+
+    </script>
+</body>
+
+</html>

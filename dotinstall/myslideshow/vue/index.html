@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlideShow</title>
+    <style>
+        main{
+            width:300px;
+            margin:0 atuo;
+        }
+        img{
+            vertical-align: bottom;
+        }
+        ul{
+            list-style: none;
+            padding:0;
+            margin:0;
+        }
+        .main{
+            width:300px;
+            height:200px;
+            margin-bottom: 8px;
+        }
+        nav{
+            margin-bottom: 8px;
+        }
+        nav ul{
+            display:flex;
+            justify-content: space-between;
+        }
+        nav li{
+            border:1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+            padding:4px;
+            text-align: center ;
+            cursor:pointer;
+            user-select: none;
+        }
+        nav li:hover{
+            background: #f8f8f8;
+        }
+        .play{
+            width:140px;
+        }
+        .prev,
+        .next{
+            width:60px;
+        }
+        .thumbnails{
+            display:grid;
+            grid-template-columns: repeat(5, 56px);
+            gap:5px;
+        }
+        .thumbnails li{
+            cursor: pointer;
+            opacity: 0.4;
+        }
+        .thumbnails li:hover,
+        .thumbnails li.current{
+            opacity:1;
+        }
+        .thumbnails img{
+            width:56px;
+        }
+
+    </style>
+</head>
+<body>
+    <main id = "app">
+        <img v-bind:src = images[currentIndex]  class = "main">
+        <nav>
+            <ul>
+                <li class="play" v-on:click="play()">{{ status }}</li>
+                <li class="prev" v-on:click="prev()">&lt;</li>
+                <li class="next" v-on:click="next()">&gt;</li>
+            </ul>
+        </nav>
+        <ul class="thumbnails">
+            <li v-for="(img,index) in images" v-bind:class={current:currentIndex===index}>
+                <img :src = img v-on:click="select(index)">
+            </li>
+        </ul>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        new Vue({
+            el:'#app',
+            data(){
+                return{
+                    images: [
+                        'img/pic00.png',
+                        'img/pic01.png',
+                        'img/pic02.png',
+                        'img/pic03.png',
+                        'img/pic04.png',
+                        'img/pic05.png',
+                        'img/pic06.png',
+                        'img/pic07.png',
+                    ],
+                    currentIndex:0,
+                    timeoutId:'',
+                    status:'Play',
+                    isPlaying:false,
+                }
+            },
+            methods:{
+                next(){
+                    if (this.currentIndex === this.images.length - 1) {
+                        this.currentIndex = 0;
+                    } else {
+                        this.currentIndex++;
+                    }
+                },
+                prev(){
+                    if(this.currentIndex <= 0){
+                        this.currentIndex = this.images.length-1;
+                    }else{
+                        this.currentIndex--;
+                    }
+                },
+                playSlideshow(){
+                    this.timeoutId = setTimeout(() => {
+                        if (this.currentIndex === this.images.length - 1) {
+                            this.currentIndex = 0;
+                        } else {
+                            this.currentIndex++;
+                        }
+                        this.playSlideshow();
+                    }, 1000);
+                },
+                play(){
+                    if(this.isPlaying){
+                        clearTimeout(this.timeoutId);
+                        this.isPlaying=false;
+                        this.status = 'Play';
+                    }else{
+                        this.playSlideshow();
+                        this.isPlaying=true;
+                        this.status = 'Pause';
+                    }
+                },
+                select:function(index){
+                    this.currentIndex=index;
+                }
+            }
+
+        });
+    </script>
+
+</body>
+</html>

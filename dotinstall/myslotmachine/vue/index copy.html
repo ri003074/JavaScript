@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SlotMachine</title>
+    <style>
+        body{
+            background:#bdc3c7;
+            font-size:16px;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        main{
+            width:300px;
+            background:#ecf0f1;
+            padding:20px;
+            border:4px solid #fff;
+            border-radius: 12px;;
+            margin:16px auto;
+            display:flex;
+            justify-content: space-between;
+        }
+        .panel img{
+            width:90px;
+            height:110px;
+            margin-bottom:4px;
+        }
+        .stop{
+            cursor:pointer;
+            width:90px;
+            height:32px;
+            background:#ef454a;
+            box-shadow:0 4px 0 #d1483e;
+            border-radius:16px;
+            line-height:32px;
+            text-align: center;
+            font-size:14px;
+            color:#fff;
+            user-select: none;
+        }
+        .spin{
+            cursor:pointer;
+            width:280px;
+            height:36px;
+            background:#3498db;
+            box-shadow:0 4px 0 #2880b9;
+            border-radius:18px;
+            line-height:36px;
+            text-align: center;
+            font-size:14px;
+            color:#fff;
+            user-select: none;
+            margin:0 auto;
+        }
+        .unmatched{
+            opacity:0.5;
+        }
+        .inactive{
+            opacity:0.5;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="app">
+        <main>
+            <section class="panel">
+                <img v-bind:src="image">
+                <div class="stop" v-on:click="stop()">STOP</div>
+            </section>
+            <section class="panel">
+                <img v-bind:src="image">
+                <div class="stop" v-on:click="stop()">STOP</div>
+            </section>
+            <section class="panel">
+                <img v-bind:src="image">
+                <div class="stop" v-on:click="stop()">STOP</div>
+            </section>
+        </main>
+        <div class="spin" v-on:click="spin()">start</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+
+        var vue = new Vue({
+            el:'#app',
+            data(){
+                return{
+                    images: [
+                        'img/seven.png',
+                        'img/bell.png',
+                        'img/cherry.png',
+                    ],
+                    image:'img/seven.png',
+                    timeoutId:'',
+                }
+            },
+            methods:{
+                getRandomImage(){
+                    console.log('inside var getrandom')
+                    this.image = this.images[Math.floor(Math.random()*this.images.length)];
+                },
+                spin(){
+                    console.log('inside var spin')
+                    this.timeoutId = setTimeout(() => {
+                        this.getRandomImage();
+                       this.spin(); 
+                    }, 50);
+                },
+                stop(){
+                    clearTimeout(this.timeoutId);
+                }
+            },
+        });
+
+        // 'use strict';
+
+        // {
+        //     class Panel{
+        //         constructor(){
+        //             const section  = document.createElement('section');
+        //             section.classList.add('panel');
+        //             this.img = document.createElement('img');
+        //             this.img.src = this.getRandomImage();
+        //             this.timeoutId = undefined;
+
+        //             this.stop = document.createElement('div');
+        //             this.stop.textContent = 'STOP';
+        //             this.stop.classList.add('stop','inactive');
+        //             this.stop.addEventListener('click',()=>{
+        //                 if(this.stop.classList.contains('inactive')){
+        //                     return;
+        //                 }
+        //                 this.stop.classList.add('inactive');
+        //                 clearTimeout(this.timeoutId);
+        //                 panelsLeft--;
+
+        //                 if(panelsLeft === 0){
+        //                     spin.classList.remove('inactive');
+        //                     panelsLeft=3;
+        //                     checkResult();
+        //                 }
+        //             })
+                    
+        //             section.appendChild(this.img);
+        //             section.appendChild(this.stop);
+
+        //             const main = document.querySelector('main');
+        //             main.appendChild(section);
+
+        //         }
+        //         getRandomImage(){
+        //             const images = [
+        //                 'img/seven.png',
+        //                 'img/bell.png',
+        //                 'img/cherry.png',
+        //             ];
+
+        //             return images[Math.floor(Math.random()*images.length)];
+        //         }
+        //         spin(){
+        //             this.img.src = this.getRandomImage();
+        //             this.timeoutId = setTimeout(() => {
+        //                this.spin(); 
+        //             }, 50);
+        //         }
+        //         isUnmatched(p1,p2){
+        //             return this.img.src !== p1.img.src && this.img.src !== p2.img.src;
+        //         }
+        //         unmatch(){
+        //             this.img.classList.add('unmatched');
+        //         }
+        //         activate(){
+        //             this.img.classList.remove('unmatched');
+        //             this.stop.classList.remove('inactive');
+        //         }
+        //     }
+
+        //     const panels =[
+        //         new Panel(),
+        //         new Panel(),
+        //         new Panel(),
+        //     ];
+
+        //     let panelsLeft=3;
+
+        //     function checkResult(){
+        //         if(panels[0].isUnmatched(panels[1],panels[2])){
+        //             panels[0].unmatch();
+        //         }
+        //         if(panels[1].isUnmatched(panels[0],panels[2])){
+        //             panels[1].unmatch();
+        //         }
+        //         if(panels[2].isUnmatched(panels[0],panels[1])){
+        //             panels[2].unmatch();
+        //         }
+        //     }
+
+        //     const spin = document.getElementById('spin');
+        //     spin.addEventListener('click',()=>{
+        //             if(spin.classList.contains('inactive')){
+        //                 return;
+        //             }
+        //         spin.classList.add('inactive');
+        //         panels.forEach(panel => {
+        //             panel.activate();
+        //             panel.spin();
+        //         });
+        //     });
+        // }
+
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

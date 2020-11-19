@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="utf-8">
+  <title>Quiz</title>
+  <style>
+    body {
+      background: #414244;
+      font-size: 14px;
+      font-family: Verdana, sans-serif;
+      color:#fafafa;
+    }
+
+    .container {
+      width: 400px;
+      margin: 8px auto;
+      background: #414244;
+      border-radius: 4px;
+      padding: 16px;
+      position: relative;
+    }
+
+    .question {
+      margin-bottom: 16px;
+      font-weight: bold;
+    }
+
+    .choices {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 16px;
+    }
+
+    .choices>li {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+
+    .choices>li:hover {
+      background: gray;
+    }
+
+    .choices>li.correct {
+      background: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+      font-weight: bold;
+    }
+
+    .choices>li.correct::after {
+      content: ' ... correct!';
+    }
+
+    .choices>li.wrong {
+      background: #f8d8da;
+      border-color: #f5c6cb;
+      color: #721c24;
+      font-weight: bold;
+    }
+
+    .choices>li.wrong::after {
+      content: ' ... wrong!';
+    }
+
+    .btn,
+    #result>a {
+      background: #3498db;
+      padding: 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-align: center;
+      color: #fafafa;
+      box-shadow: 0 4px 0 #2880b9;
+    }
+
+    .btn.disabled {
+      background: #ccc;
+      box-shadow: 0 4px 0 #bbb;
+      opacity: 0.7;
+    }
+
+    .result {
+      position: absolute;
+      width: 300px;
+      background: #414244;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      top: 50px;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      border-radius: 4px;
+      text-align: center;
+      transition: 0.4s;
+    }
+
+    .result.hidden {
+      transform: translateY(-500px);
+    }
+
+    .result>p {
+      font-size: 24px;
+    }
+
+    .result>a {
+      display: block;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <section id='app' class="container">
+    <p class="question">{{ quizSet[currentNum].q }}</p>
+    <ul class="choices" v-on:click="checkAnswer($event)" v-bind:class="shuffle()">
+      <li v-for="(answer,index) in quizSet_shuffle[currentNum].a"
+        v-bind:class="{correct:rightClickIndex === index, wrong:wrongClickIndex === index}">
+        {{ answer }}
+      </li>
+      </li>
+    </ul>
+    <div class="btn" v-on:click="setQuiz($event)" v-bind:class="{disabled:isBtnDisable}">{{ msg }}</div>
+    <section class="result" v-bind:class="{hidden:isHiddenResult}">
+      <p>{{ result }}</p>
+      <p>{{ percent }}</p>
+      <a href="">Replay?</a>
+    </section>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var vm = new Vue({
+        el: '#app',
+        data() {
+          return {
+
+            quizSet: [
+              { q: '世界で一番大きな湖は？', a: ['カスピ海', 'カリブ海', '琵琶湖'] },
+              { q: '2の8乗は？', a: ['256', '64', '1024'] },
+              { q: '次のうち、最初にリリースされた言語は？', a: ['Python', 'JavaScript', 'HTML'] },
+            ],
+            quizSet_shuffle: [
+              { q: '世界で一番大きな湖は？', a: ['カスピ海', 'カリブ海', '琵琶湖'] },
+              { q: '2の8乗は？', a: ['256', '64', '1024'] },
+              { q: '次のうち、最初にリリースされた言語は？', a: ['Python', 'JavaScript', 'HTML'] },
+            ],
+            currentNum: 0,
+            isAnswered: false,
+            isShuffle: true,
+            score: 0,
+            rightClickIndex: false,
+            wrongClickIndex: false,
+            isBtnDisable: true,
+            isHiddenResult: true,
+            result: '',
+            percent: '',
+            msg:'Next',
+          }
+        },
+
+        methods: {
+
+          shuffle() {
+            if (!this.isShuffle) {
+              return;
+            }
+            for (let i = this.quizSet[this.currentNum].a.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [this.quizSet_shuffle[this.currentNum].a[j], this.quizSet_shuffle[this.currentNum].a[i]] = [this.quizSet_shuffle[this.currentNum].a[i], this.quizSet_shuffle
+              [this.currentNum].a[j]];
+            }
+          },
+
+          checkAnswer: function (e) {
+            this.isShuffle = false;
+            this.isBtnDisable = false;
+
+            if (this.isAnswered) {
+              return;
+            }
+            this.isAnswered = true;
+
+            const clickedIndexNum = [...e.currentTarget.children].indexOf(e.target);
+            if (this.quizSet_shuffle[this.currentNum].a[clickedIndexNum] === this.quizSet[this.currentNum].a[0]) {
+              this.rightClickIndex = clickedIndexNum;
+              this.score++;
+            } else {
+              this.wrongClickIndex = clickedIndexNum;
+            }
+          },
+
+          setQuiz: function (e) {
+            this.isBtnDisable = true;
+            this.isShuffle = true;
+            this.rightClickIndex = false;
+            this.wrongClickIndex = false;
+
+            if (!this.isAnswered) {
+              return;
+            }
+
+            this.isAnswered = false;
+
+            if (this.quizSet.length - 1 > this.currentNum) {
+              this.currentNum++;
+              if(this.quizSet.length -1 ===  this.currentNum){
+                this.msg="Show Score";
+              }
+            } else {
+              this.isHiddenResult = false;
+              console.log(`${this.score / this.quizSet.length}`);;
+              this.result = "Score: " + this.score + "/" + this.quizSet.length;
+              this.percent = "正答率は" + (this.score / this.quizSet.length) * 100 + "%です。";
+            }
+          }
+        },
+      });
+    })();
+
+  </script>
+</body>
+
+</html>

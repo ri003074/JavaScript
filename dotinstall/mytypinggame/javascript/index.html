@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypingGame</title>
+    <style>
+        body {
+            padding-top: 40px;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+        }
+
+        #target {
+            font-size: 48px;
+            letter-spacing: 3px;
+        }
+
+        .info {
+            color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <p id="target">word</p>
+    <p class="info">
+        Letter count:<span id="score">0</span>
+        Miss count :<span id="miss">0</span>
+    </p>
+
+    <script>
+        'use strict';
+        {
+            const words =[
+                'apple',
+                'sky',
+                'blue',
+            ];
+            let loc = 0;
+            let num = 0
+            let score = 0;
+            let miss = 0;
+            // let word = words[Math.floor(Math.random()*words.length)];
+            let word = words[num];
+
+            const target = document.getElementById('target');
+            const scoreLabel = document.getElementById('score');
+            const missLabel = document.getElementById('miss');
+
+
+            target.textContent = word;
+
+            function updateTarget(){
+                let placeholder = '';
+                for(let i = 0; i < loc; i++){
+                    placeholder += '_';
+                }
+                target.textContent = placeholder + word.substring(loc);
+            }
+
+
+            window.addEventListener('keydown', (e) => {
+                console.log(e.key);
+
+                if (e.key === word[loc]) {
+                    console.log("socre");
+                    loc++;
+                    score++;
+                    scoreLabel.textContent = score;
+
+                    if (loc === word.length) {
+                        // word = words[Math.floor(Math.random()*words.length)];
+                        num++;
+                        word = words[num];
+                        loc = 0;
+                    }
+                    updateTarget();
+                } else {
+                    console.log("miss");
+                    miss++;
+                    missLabel.textContent = miss;
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
