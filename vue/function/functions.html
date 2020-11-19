@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+    <title>Document</title>
+</head>
+<body>
+    <i class="far fa-angry"></i>
+
+
+   <div id="app">
+   <div class="aaa" v-on:click="click1"> click1 </div>
+   <div class="bbb" v-on:click="click2($event)"> click2 </div>
+</div>
+   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+   <script>
+     var vm = new Vue({
+       el: '#app',
+       data() {
+         return {
+           msg: "Hello World", 
+         }
+       },
+       methods: {
+         click1(event) {
+           this.msg = "clicked1"
+           console.log(event);
+           console.log("clicked1")
+         },
+         click2(event) {
+           this.msg = "clicked2"
+           console.log(event);
+           console.log("clicked2")
+         },
+       },
+     });
+   </script> 
+</body>
+</html>

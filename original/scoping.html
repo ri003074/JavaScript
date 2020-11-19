@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        'use strict';
+
+        const shape = {
+            radius: 10, 
+            func1(){
+                console.log("func1")
+                return this.radius ;
+            },         
+            func2: () => {
+                console.log("func2")
+                return this.radius
+            }
+        };
+
+        // console.log(this.radius);
+         console.log(shape.func1());
+        console.log(shape.func2());
+
+
+    </script>
+</body>
+</html>

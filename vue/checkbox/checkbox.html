@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fruit</title>
+</head>
+
+<body>
+    <div id="app">
+        <div v-for="fruit in fruits">
+            <input type="checkbox" v-model="fruitsNames.category" v-bind:value="fruit.name" checked>{{ fruit.name }}
+        </div>
+        <p>{{ fruitsNames.category }}</p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                fruitsNames: {'category': ['Banana']},
+                fruits: [
+                    { id: 1, name: 'Apple' },
+                    { id: 2, name: 'Banana' },
+                    { id: 3, name: 'Orange' }
+                ]
+            },
+            watch: {
+                fruitsNames: {
+
+                    handler: function () {
+                        console.log("watch!!!")
+                        console.log(this.fruitsNames.length)
+                        if (this.fruitsNames.length > 1) {
+                            this.fruitsNames.shift()
+                        }
+                    },
+                    deep: true
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <div id="app" v-on:click="click()"> {{ msg }}</div>
+   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+   <script>
+     var vm = new Vue({
+       el: '#app',
+       data() {
+         return {
+           msg: "Hello World", 
+         }
+       },
+       mounted(){
+        fetch(
+            'https://script.google.com/macros/s/AKfycbyL6aFXqsUudZdhkoNxFfV9K7RDiqMJ9oO8k5zW/exec'
+            )
+        .then(function(response){
+
+        }).catch(function (error){
+            console.log(error);
+            console.log("error");
+        });
+       },
+       methods: {
+         click() {
+           this.msg = "clicked!"
+         },
+       },
+     });
+   </script> 
+</body>
+</html>

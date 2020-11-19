@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <p>{{ quizSet[0].q }}</p>
+
+    <ul v-for="quiz in quizSet[0].a">
+      <li>{{ quiz }}</li>
+    </ul>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data() {
+        return {
+          msg: "Hello World",
+          quizSet:[]
+        }
+      },
+      // mounted: function(){
+      created: function(){
+        context = {q:"q1", a:["a1","a2","a3"]},
+        this.quizSet.push(context);
+      },
+      methods: {
+      },
+    });
+  </script>
+</body>
+
+</html>

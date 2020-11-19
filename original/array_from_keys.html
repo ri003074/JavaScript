@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        'use strict'
+
+        console.log(Array(5));
+        console.log(typeof(Array(5)));
+        console.dir(Array(5));
+        console.log(JSON.stringify(Array(5)));
+        console.dir(Array(5).keys());
+        console.log(JSON.stringify(Array(5).keys()));
+        console.log(Array(5).keys());
+
+        console.log(Array(5).length);
+        
+        const array = [1,2,3];
+        console.log(typeof(array));
+
+        console.log(array);
+
+        // let array2 = Array.from(Array(5).keys());
+        // console.table(array2);
+
+        const obj = { xxx:"yyy"};
+        console.log(Object.keys(obj));
+
+        console.log(Object.keys(array));
+
+        console.log(Array(5).keys())
+
+
+
+        const array6 = new Array(5);
+        array6.fill("99");
+        console.log(array6.keys());
+        console.log(Object.keys(array6));
+        console.log(JSON.stringify(array6));
+
+        const arr  = new Array(5);
+        console.log(arr);
+        console.log(Array(5));
+        
+
+        console.log(arr.length);
+        console.log(Array(5).length);
+
+        const arr3 = ["a","b"];
+        console.log(Object.keys(arr3));
+        console.log(typeof(Object.keys(arr3)));
+        console.log(typeof(arr3.keys()));
+        console.log(arr3.keys());
+        console.log('%cStyle','color:green')
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script>
+    'use strict';
+
+    const numbers = [1,2,3,4,5];
+    
+    function showNum(num){ console.log(num); }
+    numbers.map(showNum); //use normal function. output=1,2,3,4,5
+
+    const showNum2 = (num) => { console.log(num); }
+    numbers.map(showNum2);  //use arrow function. output=1,2,3,4,5
+
+    numbers.map((num)=>{console.log(num)}); //little bit simple. output=1,2,3,4,5
+
+    numbers.map(num => console.log(num));   //very simple. output=1,2,3,4,5
+</script> 
+</body>
+</html>

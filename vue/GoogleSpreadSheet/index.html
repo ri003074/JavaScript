@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <div id="app">
+    <div v-for="book in books">
+      {{book.title}}
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script>
+
+    new Vue({
+      el: '#app',
+      data() {
+        return {
+          message: 'Book List',
+          books: null,
+        }
+      },
+      mounted() {
+        fetch(
+          'https://script.google.com/macros/s/AKfycbzLkIeD4Ae-WY-zAh_PXVWth4VUHDol5hnRTJ7OLrUA2PPQSCnF/exec',
+
+        )
+          .then(res => res.json())
+          .then(
+            result => {
+              this.books = result
+              console.table(result)
+            },
+            error => {
+              console.log("errors");
+            },
+          );
+      }
+    })
+
+  </script>
+</body>
+
+</html>
