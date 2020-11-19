@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My English Study App</title>
+
+    <!--reset css-->
+    <link rel="stylesheet" href="https://unpkg.com/sanitize.css" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,600">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+    <!-- font awesome -->
+    <link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="target">
+
+        <div class="flex-center" v-bind:class="{'full-height':pageStatus!=='list'}">
+            
+            <!-- Top Page -->
+            <div v-if=pageStatus==='sheetSelect'>
+                <div>
+                    <button class="btn" v-on:click="setSheet('English');setPageStatus('top')">Various</button>
+                </div>
+                <div>
+                    <button class="btn" v-on:click="setSheet('Distinction');setPageStatus('top')">Distinction</button>
+                </div>
+                <div>
+                    <button class="btn" v-on:click="setSheet('Part5-400-drill');setPageStatus('top')">400 Drill</button>
+                </div>
+                <div>
+                    <button class="btn" v-on:click="setSheet('出る1000');setPageStatus('top')">Dell 1000</button>
+                </div>
+            </div>
+            <!-- Top Page -->
+
+            <!-- Top Page -->
+            <div v-if=pageStatus==='top'>
+                <button class="btn" v-on:click="setPageStatus('input');clearInputArea();focusJapanese()">Input</button>
+                <button class="btn" v-on:click="setPageStatus('levelselect');startMusic();">Output</button>
+            </div>
+            <!-- Top Page -->
+
+            <!-- Input Page -->
+            <div v-if=pageStatus==='input'>
+                <form v-on:submit.prevent="storeItemToGoogleSpreadsheet">
+
+                    <p v-if="errors.length">
+                        <b>Please correct the following error(s):</b>
+                    <div v-for="error in errors">{{ error }}</div>
+                    </p>
+
+                    <div class="form-group">
+                        <input class="form-control mb-4" type="text" ref="focusThis" v-model="japanese"
+                            placeholder="Japanese">
+                        <input class="form-control" type="text" v-model="english" placeholder="English">
+                        <button class="btn mt-4" type="submit" value="Add" v-on:click="focusJapanese()">Add</button>
+                        <button class="btn mt-4" v-on:click="setPageStatus('list')">List</button>
+                        <div>
+                            <button class="btn mt-4 back" v-on:click="setPageStatus('top')">Top</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Input Page -->
+
+            <!-- Word List Page -->
+            <div v-else-if="pageStatus==='list'">
+                <button class="btn mt-4 mb-4 back" v-on:click="setPageStatus('top')">Top</button>
+                <button class="btn mt-4 mb-4 back" v-on:click="setPageStatus('input');focusJapanese()">Input</button>
+                <table class="table table-hover">
+                    <tr>
+                        <th></th>
+                        <th>日本語</th>
+                        <th>英語</th>
+                        <th></th>
+                    </tr>
+                    <tr v-for="(word,index) in words">
+                        <td>
+                            {{ word.id }}
+                        </td>
+                        <td>
+                            <div v-if="word.editJapanese===false" v-on:click="word.editJapanese=true" v-text="word.ja">
+                            </div>
+                            <input v-if="word.editJapanese===true"
+                                v-on:blur="word.editJapanese=false;updateItemToLocalStorage(word.id)"
+                                class="form-control edit-form" type="text" v-model="word.ja">
+                            <div v-if="word.editJapanese===true" class="mt-2 mb-2">editting</div>
+                        </td>
+                        <td>
+                            <div v-if="word.editEnglish===false" v-on:click="word.editEnglish=true" v-text="word.en">
+                            </div>
+                            <input v-if="word.editEnglish===true"
+                                v-on:blur="word.editEnglish=false;updateItemToLocalStorage(word.id)"
+                                class="form-control edit-form" type="text" v-model="word.en">
+                            <div v-if="word.editEnglish===true" class="mt-2 mb-2">editting</div>
+                        </td>
+                        <td v-on:click="deleteItemFromGoogleSpreadSheet(word.id)">
+                            [x]
+                        </td>
+                    </tr>
+                </table>
+                <button class="btn mt-4 mb-4 back" v-on:click="setPageStatus('top')">Top</button>
+                <button class="btn mt-4 mb-4 back" v-on:click="setPageStatus('input');focusJapanese()">Input</button>
+            </div>
+            <!-- Word List Page -->
+
+            <!-- Level Select Page -->
+            <div class="content" v-else-if="pageStatus==='levelselect'">
+                <button class="btn" v-bind:class="{clearText:isPlaying==='countdown' || isPlaying==='playing'}"
+                    v-on:click="startGame();setLevel('easy');">Easy</button>
+                <button class="btn" v-bind:class="{clearText:isPlaying==='countdown' || isPlaying==='playing'}"
+                    v-on:click="startGame();setLevel('hard');">Hard</button>
+                <button class="btn" v-bind:class="{clearText:isPlaying==='countdown' || isPlaying==='playing'}"
+                    v-on:click="startAutoGame();setLevel('easy');">Auto</button>
+            </div>
+            <!-- Level Select Page -->
+
+            <!-- Playing Page -->
+            <div class="main container" v-else-if=pageStatus==='playing'>
+
+                <div v-if="answer===0">
+                    <i class="fas fa-keyboard fa-2x mb-4"></i>
+                </div>
+                <div v-if="answer===1">
+                    <i class="far fa-thumbs-up   fa-2x mb-4"></i>
+                </div>
+                <div v-if="answer===2">
+                    <i class="far fa-thumbs-down fa-2x mb-4"></i>
+                </div>
+
+                <div class="target mt-2">
+                    <p class="fontSmall"> {{ japanese }} </p>
+                    <span v-for="(w,index) in english"
+                        v-bind:class="{correct:location[index]===index, hard:level==='hard' && location[index] !==index}"
+                        style="white-space:pre-wrap;"> {{ w }}</span>
+                </div>
+
+                <div class="info">
+                    Letter Count:<span>{{ wordLength }}</span>
+                    Miss Count: <span>{{ missCount  }}</span>
+                </div>
+            </div>
+            <!-- Playing Page -->
+
+            <!-- Countdown Page -->
+            <div v-else-if="pageStatus==='countdown'">
+                {{ time }}
+            </div>
+            <!-- Countdown Page -->
+
+
+            <div v-else-if="pageStatus==='end'">
+
+                <!-- <i class="far fa-grin-beam fa-5x icon" v-on:click="setPageStatus('top')"></i> -->
+                <i class="far fa-grin-beam fa-5x icon" v-on:click="startGame();"></i>
+                <div>
+                    <button class="btn mt-4" v-on:click="startGame();">Play again !</button>
+                </div>
+                <div>
+                    <button class="btn mt-4 back" v-on:click="setPageStatus('top');stopMusic()">Top</button>
+                </div>
+                <!-- <button class="btn mt-4 back" v-on:click="setPageStatus('top')">You did it !!</button> -->
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        var wordComponent = Vue.extend({
+            template: ` `
+        });
+
+        var vue = new Vue({
+            el: '#target',
+
+            data() {
+                return {
+                    defaultword: [
+                        { ja: 'りんご', en: 'apple' },
+                    ],
+                    words: [],
+                    testWords: [],
+                    japanese: undefined,
+                    english: undefined,
+                    editEnglish: false,
+                    editJapanese: false,
+                    //sheetName:'English',
+                    sheetName:'Distinction',
+                    location: [],
+                    loc: 0,
+                    isPlaying: false,
+                    time: 3,
+                    timeoutId: undefined,
+                    level: 'easy',
+                    pageStatus: 'sheetSelect', //top,input,list,levelselect,playing,countdown,end,editJapanese,editEnglish
+                    errors: [],
+                    answer: '0', //0=none, 1=correct, 2=miss
+                    wordLength: undefined,
+                    missCount: undefined,
+                    questions: 10,
+                    correct: 0,
+                    music: 'undefined',
+                    musicData: ['Free.mp3', 'infectious.mp3', 'Cloud 9.mp3'],
+                    count: 0,
+                    intervalId: undefined,
+                }
+            },
+
+            created: function () {
+            },
+
+            mounted: function () {
+                // this.getDataFromLocalStorage();
+                this.getDataFromGoogleSpreadsheet();
+                window.addEventListener('keydown', this.keydown);
+                // this.wordSet();
+            },
+
+            watch: {
+                words: {
+                    handler: function () {
+                        localStorage.setItem('words', JSON.stringify(this.words));
+                    },
+                    deep: true
+                }
+            },
+
+            methods: {
+
+                setSheet(sheet){
+                    this.sheetName = sheet;
+                    this.getDataFromGoogleSpreadsheet();
+                },
+
+                startMusic() {
+                    //this.music = new Audio('infectious.mp3');
+
+                    const rand = Math.floor(Math.random() * this.musicData.length);
+                    const music = this.musicData[rand];
+                    this.music = new Audio(music);
+                    this.music.volume = 0.1;
+                    this.music.play();
+                },
+
+                stopMusic() {
+                    this.music.pause();
+                },
+
+                focusJapanese() {
+                    console.log("focus");
+                    this.$nextTick(() => this.$refs.focusThis.focus());
+                },
+
+                clearInputArea() {
+                    this.errors = [];
+                    this.japanese = '';
+                    this.english = '';
+                },
+
+                updateItemToLocalStorage(id) {
+                    for (let i = 0; i < this.words.length; i++) {
+                        if (this.words[i].id == id) {
+
+                            var item = {
+                                ja: this.japanese,
+                                en: this.english,
+                                id: id,
+                                editJapanese: false,
+                                editEnglish: false,
+                            };
+
+                            console.log(this.words[i]);
+
+                            let params = new URLSearchParams();
+                            params.append('id', id);
+                            params.append('ja', this.words[i].ja);
+                            params.append('en', this.words[i].en);
+                            params.append('action', 'update');
+                            params.append('sheet', this.sheetName);
+                            axios.post('https://script.google.com/macros/s/AKfycbyzPyGCRPSLT85ESbrvcvXkPucoPYuZkdexf2C3Vx0j-tCmO7o/exec', params)
+                                .then(response => console.log(response))
+                                .catch(response => console.log(response));//MySpreadSheet 
+                        }
+                    }
+                },
+
+                storeItemToLocalStorage(e) {
+                    const max = this.words.reduce((a, b) => a.id > b.id ? a : b);
+                    if (this.checkForm(e)) {
+                        var item = {
+                            ja: this.japanese,
+                            en: this.english,
+                            id: max.id + 1,
+                            editJapanese: false,
+                            editEnglish: false,
+                        };
+                        //this.words.push(item);
+                        this.words.unshift(item);
+                        this.japanese = '';
+                        this.english = '';
+                    };
+                },
+
+                storeItemToGoogleSpreadsheet(e) {
+                    if (this.checkForm(e)) {
+                        var item = {
+                            ja: this.japanese,
+                            en: this.english,
+                        };
+
+                        const max = this.words.reduce((a, b) => a.id > b.id ? a : b);
+
+                        let params = new URLSearchParams();
+                        params.append('id', max.id + 1);
+                        params.append('ja', this.japanese);
+                        params.append('en', this.english);
+                        params.append('action', 'post');
+                        params.append('sheet', this.sheetName);
+                        axios.post('https://script.google.com/macros/s/AKfycbyzPyGCRPSLT85ESbrvcvXkPucoPYuZkdexf2C3Vx0j-tCmO7o/exec', params)
+                            .then(response => console.log(response))
+                            .catch(response => console.log(response));//MySpreadSheet 
+                    };
+                    //this.japanese = '';
+                    //this.english = '';
+                    this.storeItemToLocalStorage(e);
+                },
+
+                checkForm(e) {
+                    this.errors = [];
+
+                    if (this.japanese && this.english) {
+                        return true;
+                    }
+
+                    if (!this.japanese) {
+                        this.errors.push('Japanese required');
+                    }
+
+                    if (!this.english) {
+                        this.errors.push('English required');
+                    }
+                    return false;
+                },
+
+                deleteItemFromLocalStorage(id) {
+                    for (let i = 0; i < this.words.length; i++) {
+                        if (this.words[i].id == id) {
+                            this.words.splice(i, 1);
+                        }
+                    }
+                },
+
+                deleteItemFromGoogleSpreadSheet(id) {
+                    if (confirm("Are you sure?")) {
+
+                        let params = new URLSearchParams();
+                        console.log("delete");
+                        console.log(id);
+                        params.append('id', id);
+                        params.append('ja', this.japanese);
+                        params.append('en', this.english);
+                        params.append('action', 'delete');
+                        params.append('sheet', this.sheetName);
+                        axios.post('https://script.google.com/macros/s/AKfycbyzPyGCRPSLT85ESbrvcvXkPucoPYuZkdexf2C3Vx0j-tCmO7o/exec', params) //MySpreadsheet
+                            .then(response => console.log(response))
+                            .then(this.deleteItemFromLocalStorage(id))
+                            .catch(response => console.log(response));
+                    }
+                },
+
+                startGame() {
+                    console.log('game start');
+                    this.getDataFromLocalStorage();
+                    this.wordSet();
+                    this.countDown();
+                    this.setPageStatus('countdown');
+                    this.missCount = 0;
+                    this.answer = 0;
+                },
+
+                startAutoGame() {
+
+                    this.startGame();
+                    //this.sleep(3000);
+                    this.intervalId = setInterval(this.autoGame, 100);
+                },
+
+                correctSequence() {
+                    this.$set(this.location, this.loc, this.loc);
+                    this.loc++;
+                    this.answer = 1;
+                    this.wordLength--;
+                },
+
+                allCorrectSequence() {
+                    this.loc = 0;
+                    console.log('all correct');
+                    this.clearLocation();
+                    this.correct++;
+                    this.wordSet();
+                    this.answer = 0;
+                },
+
+                gameEndSequence() {
+                    console.log("finish!");
+                    this.setPageStatus('end');
+                    this.time = 3;
+                    this.correct = 0;
+                },
+
+                autoGame() {
+                    console.log(this.count++);
+                    if (this.pageStatus === "playing") {
+
+                        this.correctSequence();
+
+                        if (this.loc === this.english.length) {
+                            this.allCorrectSequence();
+                        }
+
+                        if (this.correct === this.questions) { // game end
+                            this.gameEndSequence();
+                            clearInterval(this.intervalId);
+                            // window.removeEventListener('keydown', this.keydown);
+                        }
+                    }
+                },
+
+                sleep(time) {
+                    return new Promise(function (resolve, reject) {
+                        window.setTimeout(resolve, time);
+                    });
+                },
+
+                getDataFromLocalStorage() {
+                    var item = localStorage.getItem('words');
+                    item = JSON.parse(item);
+                    if (item[0]) {
+                        this.words = item;
+                    } else {
+                        this.words = [...this.defaultword];
+                    }
+                    this.testWords = [...this.words];
+                },
+
+                getDataFromGoogleSpreadsheet() {
+                    this.japanese = "";
+                    this.english = "";
+                    this.editEnglish = false;
+                    this.editJapanese = false;
+
+                    axios.get('https://script.google.com/macros/s/AKfycbyzPyGCRPSLT85ESbrvcvXkPucoPYuZkdexf2C3Vx0j-tCmO7o/exec', { params: { sheet: this.sheetName } } )//MySpreadSheet 
+                        .then(response => this.words = response.data)
+                        .then(response => this.words.reverse())
+                        .then(response => console.log(this.words.length))
+                        .then(this.testWords = [...this.words])
+                        .catch(response => console.log(response))
+                },
+
+                countDown() {
+                    console.log("countdown");
+                    if (this.time > 0) {
+                        this.timeoutId = setTimeout(() => {
+                            console.log(this.time);
+                            this.time -= 1;
+                            this.countDown();
+                        }, 1000)
+                    } else {
+                        clearTimeout(this.timeoutId);
+                        this.setPageStatus('playing');
+                    }
+                },
+
+                setLevel(level) {
+                    this.level = level;
+                },
+
+                setPageStatus(status) {
+                    this.pageStatus = status
+                },
+
+                getWord(i) {
+                    return this.english[i]
+                },
+
+                keydown(event) {
+                    console.log(this.loc);
+                    console.log(this.getWord(this.loc));
+                    this.check(event);
+                },
+
+                clearLocation() {
+                    this.location = Array(this.english.length).fill(999);
+                },
+
+                check(event) {
+
+                    if (this.pageStatus === "top") {
+                        console.log("top");
+                        if (event.key === "o") {
+                            this.setPageStatus('levelselect')
+                            this.startMusic();
+                        }
+                        // if (event.key === "i") {
+                        //     this.setPageStatus('input')
+                        //     this.japanese="";
+                        //     this.english="";
+                        //     this.focusJapanese();
+                        // }
+                    }
+
+                    if (this.pageStatus === "sheetSelect") {
+                        console.log("sheetSelect");
+                        if (event.key === "d") {
+                            this.setPageStatus('top')
+                            this.setSheet('distinction')
+                        }
+                        if (event.key === "e") {
+                            this.setPageStatus('top')
+                            this.setSheet('English')
+                        }
+                    }
+
+                    if (this.pageStatus === "levelselect") {
+                        console.log("levelselect");
+                        if (event.key === "e") {
+                            this.startGame();
+                            this.setLevel('easy');
+                            this.setPageStatus('countdown');
+                        }
+                        if (event.key === "a") {
+                            this.startAutoGame();
+                            this.setLevel('easy');
+                            this.setPageStatus('countdown');
+                        }
+                    }
+
+                    if (this.pageStatus === "end") {
+                        console.log("end");
+                        if (event.key === "p") {
+                            this.setPageStatus('countdown')
+                            this.startGame();
+                        }
+                        if (event.key === "a") {
+                            this.setPageStatus('countdown')
+                            this.startAutoGame();
+                        }
+                        if (event.key === "t") {
+                            this.setPageStatus('top')
+                            this.stopMusic();
+                        }
+                    }
+
+                    if (this.pageStatus === "playing") {
+                        if (this.english[this.loc].toLowerCase() === event.key) {
+                            console.log("correct");
+                            this.correctSequence();
+
+                        } else {
+                            this.missCount++;
+                            this.answer = 2;
+                            console.log("miss");
+                        }
+
+                        if (this.english[this.loc] === " " || this.english[this.loc] === "-" || this.english[this.loc] === "/") {
+                            this.$set(this.location, this.loc, this.loc);
+                            this.loc++;
+                            this.answer = 1;
+                            this.wordLength--;
+                        }
+
+                        if (this.loc === this.english.length) {
+                            this.allCorrectSequence();
+                        }
+
+                        if (this.correct === this.questions) { // game end
+                            this.gameEndSequence();
+                            // window.removeEventListener('keydown', this.keydown);
+                        }
+                    }
+                },
+
+                wordSet() {
+                    console.log("wordSet");
+                    const rand = Math.floor(Math.random() * this.testWords.length);
+                    this.english = this.testWords[rand].en;
+                    this.japanese = this.testWords[rand].ja;
+                    this.wordLength = this.english.length;
+                    this.testWords.splice(rand, 1);
+                },
+            },
+
+            computed: {
+            },
+
+        })
+    </script>
+</body>
+
+</html>

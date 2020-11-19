@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .full_height{
+            font-size:20px;
+            height:100vh;
+            text-align: center ;
+        }
+    </style>
+</head>
+<body>
+    <div id="app" class="{full_height:isPageStatus==='top'}"> {{ msg }}</div>
+    <!-- <div id="app" >  -->
+        
+        <!-- <div v-bind:class="{full_height:isPageStatus==='top'}">
+            {{msg}}
+        </div> -->
+    
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+      var vm = new Vue({
+        el: '#app',
+        data() {
+          return {
+              isPageStatus:'top',
+            msg: "Hello World", 
+          }
+        },
+        methods: {
+          click() {
+            this.msg = "clicked!"
+          },
+        },
+      });
+    </script>
+    
+</body>
+</html>

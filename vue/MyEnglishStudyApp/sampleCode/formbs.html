@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+    <title>form</title>
+
+    <!-- Style -->
+    <style>
+        body {
+            /* font-family: 'Courier New', Courier, monospace; */
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            color: #636b6f;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .target {
+            font-size: 28px;
+        }
+
+        .info {
+            color: #ccc;
+            padding-top: 40px;
+        }
+        .hard{
+            color:white;
+        }
+
+        .full-height {
+            height: 100vh;
+        }
+
+        .flex-center {
+            align-items: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .btn{
+            text-decoration: none;
+            border: none;
+            margin:56px;
+            font-size:24px;
+            background-color: white;
+            color: #636b6f;
+            user-select: none;
+        }
+
+        .btn:focus{
+            outline:0;
+            user-select: none;
+        }
+
+        .clearText {
+                text-indent:-9999px;
+                white-space:nowrap;
+                overflow:hidden;
+                border:none;
+                user-select: none;
+        }
+
+    </style>
+
+
+</head>
+<body>
+    <div id="target" class="full-height flex-center">
+        <form @submit.prevent="addItem">
+            <div class="form-group">
+            <input class="form-control mb-4" type="text" v-model="japanese" placeholder="Japanese">
+            <input class="form-control" type="text" v-model="english" placeholder="English">
+            <button class="btn  mt-4" type="submit" value="Add">Add</button>
+            <button class="btn  mt-4"v-on:click="setPageStatusToTop()">Back</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

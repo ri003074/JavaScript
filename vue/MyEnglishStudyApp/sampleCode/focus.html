@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <button  v-on:click="click()">Click!</button>
+        <input type="text" v-if=state==="input" ref="focusThis">
+        <!-- <input type="text" ref="focusThis"> -->
+        <!-- <input type="text" v-show=state==="input" ref="focusThis"> -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    msg: "Hello World",
+                    state:undefined,
+                }
+            },
+            methods: {
+                click() {
+                    this.msg = "clicked!"
+                    this.state='input'
+                    this.$nextTick(()=>this.$refs.focusThis.focus());
+                },
+            },
+        });
+    </script>
+</body>
+
+</html>

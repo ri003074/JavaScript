@@ -1,0 +1,92 @@
+//$main-background-color: #fafafa;
+//$main-moji-color:#636b6f;
+//$main-background-color:#2a2a2a;
+$main-background-color:#414244;
+$main-moji-color:#fafafa;
+
+body {
+    text-align: center;
+    margin: 0;
+    height: 100vh;
+    color:$main-moji-color;
+    font-family: 'Nunito', sans-serif;
+    background-color:$main-background-color;
+}
+
+.target {
+    font-size: 32px;
+}
+
+.info {
+    color: #ccc;
+    padding-top: 40px;
+}
+.correct {
+    color: #666;
+    padding-top: 40px;
+}
+
+.hard {
+    color:#fafafa;
+}
+
+.full-height {
+    height: 100vh;
+}
+
+.flex-center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    text-decoration: none;
+    border: none;
+    margin-right: 40px;
+    margin-left: 40px;
+    font-size: 32px;
+    background-color: $main-background-color;
+    color: $main-moji-color;
+    user-select: none;
+    outline: none;
+
+    :focus {
+        outline: 0;
+        user-select: none;
+        border:1px solid #fafafa;
+    }
+}
+
+.clearText {
+    text-indent: -9999px;
+    white-space: nowrap;
+    overflow: hidden;
+    border: none;
+    user-select: none;
+    outline: none;
+    padding: 0;
+}
+
+.back {
+    font-size: 24px;
+}
+
+ul {
+    list-style: none;
+}
+
+.fontSmall{
+    font-size:24px;
+}
+
+.icon{
+    cursor:pointer;
+}
+
+.edit-form{
+    text-align: center;
+    border:none;
+    background-color: $main-background-color;
+}
+

@@ -1,0 +1,102 @@
+body {
+  text-align: center;
+  margin: 0;
+  height: 100vh;
+  color: #fafafa;
+  font-family: 'Nunito', sans-serif;
+  background-color: #414244;
+}
+
+.target {
+  font-size: 32px;
+}
+
+.info {
+  color: #ccc;
+  padding-top: 40px;
+}
+
+.correct {
+  color: #666;
+  padding-top: 40px;
+}
+
+.hard {
+  color: #fafafa;
+}
+
+.full-height {
+  height: 100vh;
+}
+
+.flex-center {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.btn {
+  text-decoration: none;
+  border: none;
+  margin-right: 40px;
+  margin-left: 40px;
+  font-size: 32px;
+  background-color: #414244;
+  color: #fafafa;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  outline: none;
+}
+
+.btn :focus {
+  outline: 0;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  border: 1px solid #fafafa;
+}
+
+.clearText {
+  text-indent: -9999px;
+  white-space: nowrap;
+  overflow: hidden;
+  border: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  outline: none;
+  padding: 0;
+}
+
+.back {
+  font-size: 24px;
+}
+
+ul {
+  list-style: none;
+}
+
+.fontSmall {
+  font-size: 24px;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+.edit-form {
+  text-align: center;
+  border: none;
+  background-color: #414244;
+}
+/*# sourceMappingURL=style.css.map */
