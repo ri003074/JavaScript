@@ -1,1 +1,15 @@
-npm 
+npm →パッケージ管理ツール
+
+npm install -g @vue/cli ;vue-cliをインストール
+
+vue --version 
+
+vue create udemy-vuejs  ; create project
+
+
+ファイルの説明
+
+babel.config.js
+ES6をES5にトランスコンパイルする
+ES5はほとんどのブラウザに対応している。
+ES6は最新。
