@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="app">
+        <my-component></my-component>
+        <my-component></my-component>
+        <my-component></my-component>
+        <hr>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script>
+
+        //local component
+        var component = {
+            data: function(){
+                return {
+                    number:12,
+                }
+            },
+            template: '<p>iine{{number}}<button v-on:click="increment">btn</button></p>',
+            methods:{
+                increment: function(){
+                    this.number += 1;
+                }
+            }
+        }
+        var vm = new Vue({
+            el: '#app',
+            data() {
+                return {
+                }
+            },
+            components:{
+                'my-component' : component
+            }
+        });
+    </script>
+</body>
+
+</html>
