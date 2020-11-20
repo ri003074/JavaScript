@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body{
+            font-size: 16px;;
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        .container{
+            width:330px;
+            margin:20px auto;
+        }
+
+        .container ul{
+            list-style:none;
+            margin: 0;
+            padding:0;
+            display:flex;
+            flex-wrap:wrap;
+        }
+
+        .container li{
+            width:100px;
+            height:100px;
+            line-height:100px;
+            text-align:center;
+            cursor:pointer;
+            user-select:none;
+            border-radius: 5px;
+            margin:0 5px 10px;
+        }
+
+    </style>
+    <title>MyReactApp</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+    <!-- Don't use this in production: -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        (()=>{
+
+            function Counter(props){
+                // return <div>0 {props.color}</div>;
+                // return <li style={{backgroundColor:props.color}}>0 {props.color}</li>;
+
+                function countUp(color){
+                    alert(color);
+                }
+                return (
+                    <li style={{backgroundColor:props.color}} onClick={ ()=>
+                        countUp(props.color)}>
+                            0
+                    </li>
+                );
+            }
+
+            ReactDOM.render(
+                <div className="container">
+                    <ul>
+                        <Counter color="tomato" />
+                        <Counter color="skyblue" />
+                        <Counter color="limegreen" />
+                    </ul>
+                </div>,
+                document.getElementById('root')
+            )
+
+
+
+
+
+
+
+
+
+            // const name = 'Kenta'
+            // ReactDOM.render(
+            //     <div>
+            //         <p>Hello! {name.toUpperCase()}</p>
+            //         <hr/>
+            //     </div>,
+            //     document.getElementById('root')
+            // )
+        })();
+    </script>
+</body>
+</html>
