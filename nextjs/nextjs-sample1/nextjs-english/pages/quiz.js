@@ -6,7 +6,7 @@ import { Router, useRouter } from "next/router"
 export default function QuizApp() {
     const router = useRouter()
 
-    console.log(router)
+    console.log(router.query)
     return (
         <div>
 

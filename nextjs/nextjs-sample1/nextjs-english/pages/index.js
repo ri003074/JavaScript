@@ -13,8 +13,10 @@ export default function Home({ posts }) {
       id:post.id
     }
   })
+  console.log(post_data)
   // post_data = [1,2,3]
-  post_data = {'id':"xxx", 'data':"yyy"}
+  // post_data = {'id':"xxx", 'data':"yyy"}
+  post_data = [{'id':'xxx'},{'id':'yyy'}]
   console.log(post_data)
 
 
