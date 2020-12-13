@@ -1,12 +1,47 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import HeaderLayout from './header'
+import { Router, useRouter } from "next/router"
+import phrase from './phrase/[phrase]';
+
+const products = [{name: "bag" }, {name: "shoes"}, {name: "socks"}];
 
 export default function Home({ posts }) {
+  const router = useRouter();
+  var post_data = posts.map(post =>{
+    return {
+      id:post.id
+    }
+  })
+  // post_data = [1,2,3]
+  post_data = {'id':"xxx", 'data':"yyy"}
+  console.log(post_data)
+
+
+
+  // const counters = prevState.counters.map(counter => {
+  //   return {id: counter.id, count: counter.count, color: counter.color};
+  // });
 
   return (
     <div className="container">
       <HeaderLayout></HeaderLayout>
+
+
+
+      <ul>
+        {products.map(product => {
+          return (
+            <li key={product.name}>
+              <Link as={`/products/${product.name}`} href="/products/[name]">
+              {product.name}
+              </Link>
+              </li>
+          );
+        })}
+      </ul>
+
+
 
       <Head>
         <title>Create Next App</title>
@@ -20,11 +55,26 @@ export default function Home({ posts }) {
         <Link href="/quiz">
           <a>go to Quiz</a>
         </Link>
+        <Link href={{ pathname:"/quiz", query: post_data}}>
+        {/* <Link href={{ pathname:"/quiz", query: {id: posts.id}}}> */}
+          <a>go to Quiz with data</a>
+        </Link>
 
         <h1>POST一覧</h1>
         <ul>
           {posts.map((post) => {
-            return <li key={post.id}>{post.id}:{post.phrase_en}:{post.phrase_ja}</li>;
+            return (
+
+              <li key={post.id}>
+              <Link as={`/phrase/${post.phrase_en}`} href="/phrase/[phrase_en]">
+                  {post.phrase_en}
+              </Link>
+              <span onClick={() => router.push(`/phrase/${post.phrase_en}`)}>
+                click me
+              </span>
+
+              </li>
+            );
           })}
         </ul>
 
