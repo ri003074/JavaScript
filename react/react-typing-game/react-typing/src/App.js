@@ -1,19 +1,46 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-
 class App extends Component {
+
+  constructor(props){
+    super(props)
+    this.state = { quizSet:["abc","def"], 
+                   quizNumber:0, 
+                   wordLocation:0, }
+  }
+
+  keyDown = (e) => {
+      console.log(e.key)
+      console.log(this.state.quizSet[this.state.quizNumber])
+
+      if (this.state.quizSet[this.state.quizNumber][this.state.wordLocation] === e.key) {
+          console.log("ok!")
+          const wordLocation = this.state.wordLocation
+          this.setState({ wordLocation: wordLocation + 1 })
+
+          if(this.state.wordLocation === this.state.quizSet[this.state.quizNumber].length){  //タイプしている位置がクイズの長さと一致した場合、次の単語に行くか、最初の単語に戻る.
+              const quizNumber = this.state.quizNumber 
+              if(quizNumber === this.state.quizSet.length-1){ //最初の単語に戻る
+                  this.setState({quizNumber:0}) 
+              } else { //次の単語に行く
+                  this.setState({quizNumber: quizNumber+1}) 
+          } 
+          this.setState({wordLocation: 0})
+      }
+    } else {
+        console.log("ng!")
+    }
+  }
+
+  componentDidMount(){
+    window.addEventListener('keydown', this.keyDown.bind(this))
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
+      <React.Fragment>
+        <div>{this.state.quizSet[this.state.quizNumber]}</div>
+      </React.Fragment>
     );
   }
 }
