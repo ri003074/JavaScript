@@ -4,10 +4,12 @@ class App extends Component {
 
   constructor(props){
     super(props)
-    this.state = { quizSet:["abc","def"], 
-                   quizNumber:0, 
-                   wordLocation:0, }
+    this.state = {
+      quizSet: ["abc", "def"],
+      quizNumber: 0,
+      wordLocation: 0,
     }
+  }
 
   keyDown = (e) => {
       console.log(e.key)
