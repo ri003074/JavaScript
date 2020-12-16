@@ -7,16 +7,16 @@ class App extends Component {
     this.state = { quizSet:["abc","def"], 
                    quizNumber:0, 
                    wordLocation:0, }
-  }
+    }
 
   keyDown = (e) => {
       console.log(e.key)
       console.log(this.state.quizSet[this.state.quizNumber])
 
-      if (this.state.quizSet[this.state.quizNumber][this.state.wordLocation] === e.key) {
+      if (this.state.quizSet[this.state.quizNumber][this.state.wordLocation] === e.key) { //正解のケース
           console.log("ok!")
           const wordLocation = this.state.wordLocation
-          this.setState({ wordLocation: wordLocation + 1 })
+          this.setState({ wordLocation: wordLocation + 1 }) //次のwordLocationへ行く。
 
           if(this.state.wordLocation === this.state.quizSet[this.state.quizNumber].length){  //タイプしている位置がクイズの長さと一致した場合、次の単語に行くか、最初の単語に戻る.
               const quizNumber = this.state.quizNumber 
@@ -33,13 +33,13 @@ class App extends Component {
   }
 
   componentDidMount(){
-    window.addEventListener('keydown', this.keyDown.bind(this))
+      window.addEventListener('keydown', this.keyDown.bind(this))
   }
 
   render() {
     return (
       <React.Fragment>
-        <div>{this.state.quizSet[this.state.quizNumber]}</div>
+        <div className="App">{this.state.quizSet[this.state.quizNumber]}</div>
       </React.Fragment>
     );
   }
