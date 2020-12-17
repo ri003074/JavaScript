@@ -1,4 +1,4 @@
-import { TYPING } from '../actions'
+import { CORRECTTYPE, NEXTQUIZ, RESETQUIZ } from '../actions'
 
 const initialState = {
     quizSet: ["abc", "def"],
@@ -7,10 +7,13 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
-    console.log("inside  quiz.js")
     switch(action.type){
-        case TYPING:
-            return { quizSet:state.quizSet, wordLocation: state.wordLocation+1 , quizNumber:0 }
+        case CORRECTTYPE:
+            return { quizSet:state.quizSet, wordLocation:state.wordLocation+1, quizNumber:state.quizNumber }
+        case NEXTQUIZ:
+            return { quizSet:state.quizSet, wordLocation:0, quizNumber:state.quizNumber+1 }
+        case RESETQUIZ:
+            return { quizSet:state.quizSet, wordLocation:0, quizNumber:0 }
         default:
             return state
     }
