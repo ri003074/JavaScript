@@ -7,9 +7,10 @@ const initialState = {
 }
 
 export default (state = initialState, action) => {
+    console.log("inside  quiz.js")
     switch(action.type){
         case TYPING:
-            return { wordLocation: state.wordLocation+1 }
+            return { quizSet:state.quizSet, wordLocation: state.wordLocation+1 , quizNumber:0 }
         default:
             return state
     }
