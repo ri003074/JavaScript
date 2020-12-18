@@ -21,7 +21,8 @@ export default (state = initialState, action) => {
 
         case NEXTQUIZ:
             clearQuizSetBlank()
-            return { quizSet:state.quizSet, quizSetBlank:state.quizSetBlank, wordLocation:1, quizNumber:state.quizNumber+1 }
+            const quizNumber = Math.floor(Math.random() * state.quizSet.length)
+            return { quizSet:state.quizSet, quizSetBlank:state.quizSetBlank, wordLocation:1, quizNumber:quizNumber }
 
         case RESETQUIZ:
             clearQuizSetBlank()
