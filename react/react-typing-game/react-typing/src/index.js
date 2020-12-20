@@ -11,7 +11,7 @@ import thunkMiddleware from 'redux-thunk'
 import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
 
-const store = createStore(reducer,applyMiddleware(thunkMiddleware))
+const store = createStore(reducer, applyMiddleware(thunkMiddleware))
 
 // export default function configureStore(){
 //     return createStore(

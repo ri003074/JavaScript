@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import './App.css';
+import About from './About.js'
 // import axios from 'axios'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
+
 
 import { correctType, nextQuiz, resetQuiz, initQuizData, fetchMessages } from '../actions'
 
@@ -29,37 +38,7 @@ class App extends Component {
   componentDidMount() {
     console.log("componentDidMount")
     window.addEventListener('keydown', this.keydown.bind(this))
-
-    // var contents = [];
-    // const actions = this.props
-
-    // axios
-    //   .get('http://localhost:8000/api/')
-    //   .then(function (response) {
-
-    //     let tmpData = []
-    //     let contentsCount = response.data.length;
-    //     //Quiz用のデータを作成する。
-    //     for (let i = 0; i < contentsCount; i++) {
-    //       var content = response.data[i]
-    //       var word_en_begin = content.word_en.slice(0, 1);
-
-    //       content.word_en_begin = word_en_begin
-    //       content.word_blank = word_en_begin + '_'.repeat(content.word_en.length - 1)
-    //       content.phrase_quiz = content.phrase_en.replace(content.word_en, '_'.repeat(content.word_en.length)) //英語のフレーズのなかで問題となる部分をを'_'で置き換える
-    //       content.correct_answer_rate = (content.c_counter / content.s_counter) * 100
-    //       tmpData.push(content)
-    //     }
-    //     tmpData.sort(function (a, b) { //正答率が低い順番に並び替える
-    //       return a.correct_answer_rate - b.correct_answer_rate
-    //     })
-    //     // contents = tmpData
-    //     // actions.initQuizData(tmpData)
-
-    //   })
     this.props.fetchMessages()
-
-
   }
 
 
@@ -73,15 +52,34 @@ class App extends Component {
     }
 
     return (
-      <React.Fragment>
-        <div className="App">{props.quizSetBlank[props.quizNumber]}-{props.wordLocation}</div>
-        { props.messages.map((prop, index) => <div key={index}>{prop.phrase_en}</div>) }
-      </React.Fragment>
+      <Router>
+        <React.Fragment>
+          <nav>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About</Link>
+            </li>
+          </nav>
+
+          <Switch>
+            <Route path="/about">
+              <About />
+            </Route>
+            <Route path="/">
+              <div className="App">{props.phraseJa}</div>
+              <div className="App">{props.phraseQuiz}</div>
+              {props.messages.map((prop, index) => <div key={index}>{prop.phrase_en}</div>)}
+            </Route>
+          </Switch>
+        </React.Fragment>
+      </Router>
     );
   }
 }
 
-const mapStateToProps = state => ({ quizSet: state.quiz.quizSet, quizSetBlank: state.quiz.quizSetBlank, quizNumber: state.quiz.quizNumber, wordLocation: state.quiz.wordLocation, messages: state.quiz.messages, isFetching: state.quiz.isFetching })
+const mapStateToProps = state => ({ phraseQuiz:state.quiz.phraseQuiz, phraseJa:state.quiz.phraseJa, quizSet: state.quiz.quizSet, quizSetBlank: state.quiz.quizSetBlank, quizNumber: state.quiz.quizNumber, wordLocation: state.quiz.wordLocation, messages: state.quiz.messages, isFetching: state.quiz.isFetching })
 const mapDispatchToProps = dispatch => ({
   correctType: () => dispatch(correctType()),
   nextQuiz: () => dispatch(nextQuiz()),
